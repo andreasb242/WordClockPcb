@@ -109,7 +109,7 @@ void logicLoop() {
 	RtcDateTime time;
 
 	// Read time about every second from RTC
-	if (lastTimeSync != g_Timer) {
+	if (lastTimeSync != g_Timer && currentState != 3) {
 		lastTimeSync = g_Timer;
 
 		errorCode = PCF8563_read(&time);
@@ -197,6 +197,11 @@ void logicLoop() {
 				}
 				TextDisplay_clock(clockHour, clockMin);
 
+				time.second = 0;
+				time.minute = clockMin;
+				time.hour = clockHour;
+				PCF8563_write(&time);
+
 				delay_ms(50);
 			} else {
 				buttonMinPressed = 0;
@@ -217,6 +222,11 @@ void logicLoop() {
 					clockHour = 0;
 				}
 				TextDisplay_clock(clockHour, clockMin);
+
+				time.second = 0;
+				time.minute = clockMin;
+				time.hour = clockHour;
+				PCF8563_write(&time);
 
 				delay_ms(50);
 			}
