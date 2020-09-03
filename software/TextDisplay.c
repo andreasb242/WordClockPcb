@@ -13,11 +13,6 @@
 // 08: ZEHNEUNTUHR
 #include "TextDisplay.h"
 
-
-// TODO DEBUG
-#include "lib/usb-cdc.h"
-
-
 //! Current display Buffer (no double buffering)
 extern uint16_t m_displayBuffer[9];
 
@@ -99,8 +94,8 @@ void TextDisplay_txtZweiUhr() {
 }
 
 void TextDisplay_txtDreiUhr() {
-	//         05: ELFÜNFZWEIT
-	tmpBuf[5] |= 0b00000011110;
+	//         04: ZWÖLFDREINS
+	tmpBuf[4] |= 0b00000111100;
 }
 
 void TextDisplay_txtVierUhr() {
