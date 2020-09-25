@@ -12,8 +12,13 @@
 #include "ClockDisplay.h"
 #include "TextDisplay.h"
 #include "lib/PFC8563.h"
+#include "hardware.h"
 
+#ifdef HWREF1
 #define SETUP_LED P1_7
+#else
+uint8_t SETUP_LED = 0;
+#endif
 
 /**
  * Current Hour
@@ -25,7 +30,9 @@ uint8_t clockHour = 0;
  */
 uint8_t clockMin = 0;
 
-//! Current display Buffer (no double buffering)
+/**
+ * Current display Buffer (no double buffering)
+ */
 extern uint16_t m_displayBuffer[9];
 
 /**
@@ -73,9 +80,12 @@ uint16_t ReadTouchKey(uint8_t channel) {
  * Initialize Hardware
  */
 void logicInit() {
+
+#ifdef HWREF1
 	// Setup LED
 	// P1_6
 	P1_MOD_OC &= ~(1 << 7);
+#endif
 	SETUP_LED = 0;
 
 	// Setup Touch

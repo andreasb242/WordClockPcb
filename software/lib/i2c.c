@@ -7,8 +7,13 @@
 
 #include "i2c.h"
 
+#if HWREF1
 #define SDA_BUS P3_1
 #define SCL_BUS P3_0
+#else
+#define SDA_BUS P1_1
+#define SCL_BUS P1_7
+#endif
 
 /**
  * Delay for I2c
