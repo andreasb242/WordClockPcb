@@ -12,6 +12,7 @@
 #include "ClockDisplay.h"
 #include "TextDisplay.h"
 #include "lib/PFC8563.h"
+#include "lib/dataflash.h"
 #include "hardware.h"
 
 #ifdef HWREF1
@@ -29,6 +30,11 @@ uint8_t clockHour = 0;
  * Current Minute
  */
 uint8_t clockMin = 0;
+
+/**
+ * Additional 4 LEDs enabled, set clock also supports then 1 minute steps
+ */
+uint8_t g_additionalLedsEnabled = 1;
 
 /**
  * Current display Buffer (no double buffering)
@@ -80,6 +86,7 @@ uint16_t ReadTouchKey(uint8_t channel) {
  * Initialize Hardware
  */
 void logicInit() {
+	uint8_t i;
 
 #ifdef HWREF1
 	// Setup LED
@@ -99,10 +106,14 @@ void logicInit() {
 	ClockDisplay_init();
 
 	TextDisplay_clock(0, 0);
+	delay_ms(1000);
+	TextDisplay_clock(1, 0);
 
 	// Dummy Read
 	ReadTouchKey(0x03);
 	ReadTouchKey(0x04);
+
+	ReadDataFlash(0, 1, &g_additionalLedsEnabled);
 }
 
 /**
@@ -265,7 +276,18 @@ void logicCharReceived(char c) {
 	RtcDateTime time;
 
 	if (receiverCommand == 0) {
-		if (c == 'm') {
+		if (c == 'l') {
+			g_additionalLedsEnabled = !g_additionalLedsEnabled;
+			WriteDataFlash(0, &g_additionalLedsEnabled, 1);
+			UsbCdc_puts("Additional LEDs ");
+
+			if (g_additionalLedsEnabled) {
+				UsbCdc_puts("enabled\r\n");
+			} else {
+				UsbCdc_puts("disabled\r\n");
+			}
+			return;
+		} else if (c == 'm') {
 			UsbCdc_puts("Set MIN\r\n");
 		} else if (c == 'h') {
 			UsbCdc_puts("Set HOUR\r\n");

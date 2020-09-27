@@ -16,6 +16,17 @@
 //! Current display Buffer (no double buffering)
 extern uint16_t m_displayBuffer[9];
 
+/**
+ * Additional bitmask
+ */
+extern uint8_t g_AdditionalLEDs;
+
+/**
+ * Additional 4 LEDs enabled, set clock also supports then 1 minute steps
+ */
+extern uint8_t g_additionalLedsEnabled;
+
+
 //! Temp Display Buffer
 uint16_t tmpBuf[9];
 
@@ -187,6 +198,9 @@ void TextDisplay_fehler(uint8_t code) {
  * @param minute Minute
  */
 void TextDisplay_clock(uint8_t hour, uint8_t minute) {
+	uint8_t fiveMinute;
+	uint8_t additionalLEDsTemp = 0;
+
 	TextDisplay_clearTmpBuffer();
 
 	TextDisplay_txtEs();
@@ -233,6 +247,24 @@ void TextDisplay_clock(uint8_t hour, uint8_t minute) {
 	} else if (hour == 11) {
 		TextDisplay_txtElfUhr();
 	}
+
+	if (g_additionalLedsEnabled) {
+		fiveMinute = minute % 5;
+
+		if (fiveMinute > 0) {
+			additionalLEDsTemp |= 0x04;
+		}
+		if (fiveMinute > 1) {
+			additionalLEDsTemp |= 0x08;
+		}
+		if (fiveMinute > 2) {
+			additionalLEDsTemp |= 0x01;
+		}
+		if (fiveMinute > 3) {
+			additionalLEDsTemp |= 0x02;
+		}
+	}
+	g_AdditionalLEDs = additionalLEDsTemp;
 
 	minute = minute / 5;
 

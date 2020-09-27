@@ -10,6 +10,11 @@
 #include "lib/inc.h"
 
 /**
+ * Additional bitmask
+ */
+extern uint8_t g_AdditionalLEDs;
+
+/**
  * Initialize Clock Display
  */
 void ClockDisplay_init();

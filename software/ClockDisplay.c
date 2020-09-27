@@ -8,6 +8,17 @@
 #include "ClockDisplay.h"
 #include "lib/hardware.h"
 
+#include "hardware.h"
+
+#ifndef HWREF1
+extern uint8_t SETUP_LED;
+#endif
+
+/**
+ * Additional bitmask
+ */
+uint8_t g_AdditionalLEDs = 0xff;
+
 #define SERCLR P1_6
 #define SER P3_2
 #define SERCLK P3_3
@@ -77,7 +88,17 @@ void ClockDisplay_writeOutImage() {
 
 	// Write Row
 	for (i = 0; i < 16; i++) {
-		SER = (i == row);
+		if (i == 5) {
+			SER = g_AdditionalLEDs & 0x01;
+		} else if (i == 6) {
+			SER = g_AdditionalLEDs & 0x02;
+		} else if (i == 12) {
+			SER = g_AdditionalLEDs & 0x04;
+		} else if (i == 13) {
+			SER = g_AdditionalLEDs & 0x08;
+		} else {
+			SER = (i == row);
+		}
 
 		SERCLK = 0;
 		SERCLK = 1;
@@ -86,7 +107,11 @@ void ClockDisplay_writeOutImage() {
 	// Write Column
 	rowData = m_displayBuffer[m_currentRow];
 	for (i = 16; i > 0; i--) {
-		SER = !(rowData & (1 << (i - 6)));
+		if (i == 5) {
+			SER = SETUP_LED;
+		} else {
+			SER = !(rowData & (1 << (i - 6)));
+		}
 
 		SERCLK = 0;
 		SERCLK = 1;
