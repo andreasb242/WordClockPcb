@@ -373,6 +373,14 @@ void logicCharReceived(char c) {
 
 			return;
 
+		} else if (c == 'b') {
+			UsbCdc_puts("Boot to Bootloader");
+			logicPowerDown();
+
+			delay_ms(1000);
+
+			jumpToBootloader();
+			return;
 		} else {
 			return;
 		}
@@ -420,5 +428,8 @@ void logicCharReceived(char c) {
  * Called before device gets powered down by USB
  */
 void logicPowerDown() {
+	TextDisplay_clearTmpBuffer();
+	TextDisplay_flushData();
+	delay_ms(100);
 }
 
