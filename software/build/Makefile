@@ -25,6 +25,9 @@ XRAM_LOC = 0x0100
 C_FILES = $(wildcard ../lib/*.c) \
 	$(wildcard ../*.c)
 
+GIT_SHA1 := $(shell git rev-parse --short HEAD)
+GIT_DATE := $(shell git show -s --format=%ci)
+
 pre-flash:
 
 # TODO Check size for different types CH551g, CH552g, CH553g, CH554g
@@ -74,7 +77,7 @@ print-%  : ; @echo $* = $($*)
 $(TARGET).ihx: $(RELS)
 	$(CC) $(notdir $(RELS)) $(LFLAGS) -o $(TARGET).ihx
 
-$(TARGET).bin: ../usb-descriptor/usb-descriptor.h $(TARGET).ihx
+$(TARGET).bin: ../usb-descriptor/usb-descriptor.h ../sw-version.h $(TARGET).ihx
 	$(OBJCOPY) -I ihex -O binary $(TARGET).ihx $(TARGET).bin
 	@echo "################################################################################"
 	@echo "Programm size `du -k -b "$(TARGET).bin" | cut -f1` Bytes"
@@ -82,6 +85,17 @@ $(TARGET).bin: ../usb-descriptor/usb-descriptor.h $(TARGET).ihx
 
 ../usb-descriptor/usb-descriptor.h: ../usb-descriptor/usb-descriptor.json
 	../usb-descriptor/generate.py
+
+../sw-version.h:
+	echo -n "#define GIT_VERSION_SHA_SHORT \"" > ../sw-version.h
+	echo -n "${GIT_SHA1}" >> ../sw-version.h
+	echo "\"" >> ../sw-version.h
+
+	echo -n "#define GIT_VERSION_DATE \"" >> ../sw-version.h
+	echo -n "${GIT_DATE}" >> ../sw-version.h
+	echo "\"" >> ../sw-version.h
+
+.PHONY: ../sw-version.h
 
 flash: $(TARGET).bin pre-flash
 	@echo "Flash"

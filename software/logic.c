@@ -14,6 +14,7 @@
 #include "lib/PFC8563.h"
 #include "lib/dataflash.h"
 #include "hardware.h"
+#include "sw-version.h"
 
 #ifdef HWREF1
 #define SETUP_LED P1_7
@@ -324,6 +325,14 @@ void logicCharReceived(char c) {
 			row = ReadTouchKey(0x04);
 			UsbCdc_puti16(row);
 			UsbCdc_puts("\r\n");
+
+			return;
+		} else if (c == 'i') {
+			// Touch Test / Readout
+
+			UsbCdc_puts("Version: ");
+			UsbCdc_puts(GIT_VERSION_SHA_SHORT "\r\n");
+			UsbCdc_puts(GIT_VERSION_DATE "\r\n");
 
 			return;
 		} else if (c == 'a') {

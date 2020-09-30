@@ -212,18 +212,12 @@ void TextDisplay_clock(uint8_t hour, uint8_t minute) {
 
 	hour = hour % 12;
 
-	if (hour == 1 && minute > 24) {
-		// Halb ein*s*, virtel vor ein*s*
-		// Und 5 vor halb...
-		TextDisplay_txtS();
-	}
-
 	if (hour == 0) {
 		TextDisplay_txtZwoelfUhr();
 	} else if (hour == 1) {
 		TextDisplay_txtEinUhr();
 
-		if (minute != 0) {
+		if (minute >= 5) {
 			TextDisplay_txtS();
 		}
 	} else if (hour == 2) {
