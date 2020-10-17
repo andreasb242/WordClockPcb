@@ -8,4 +8,4 @@
 #pragma once
 
 //! Comment in for first HW Revision
-//#define HWREF1
+#define HWREF1

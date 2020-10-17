@@ -6,8 +6,9 @@
  */
 
 #include "i2c.h"
+#include "../hardware.h"
 
-#if HWREF1
+#ifdef HWREF1
 #define SDA_BUS P3_1
 #define SCL_BUS P3_0
 #else

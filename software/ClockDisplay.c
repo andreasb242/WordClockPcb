@@ -107,11 +107,15 @@ void ClockDisplay_writeOutImage() {
 	// Write Column
 	rowData = m_displayBuffer[m_currentRow];
 	for (i = 16; i > 0; i--) {
+#ifndef HWREF1
 		if (i == 5) {
 			SER = SETUP_LED;
 		} else {
+#endif
 			SER = !(rowData & (1 << (i - 6)));
+#ifndef HWREF1
 		}
+#endif
 
 		SERCLK = 0;
 		SERCLK = 1;
