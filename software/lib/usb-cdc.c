@@ -661,7 +661,14 @@ void usbInterrupt() {
 	if (UIF_SUSPEND) {
 		UIF_SUSPEND = 0;
 
-		usbWakeupSuspendInterrupt();
+		// ************************************************************
+		// USB Suspend Disabled
+		// ************************************************************
+		// ############################################################
+		// USB suspend disabled, if no USB Connection is used
+		// ############################################################
+		//
+		// usbWakeupSuspendInterrupt();
 	} else {
 		// Unexpected interruption, impossible situation
 
